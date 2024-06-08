@@ -5,6 +5,8 @@ const flash = require("connect-flash");
 const passport = require("passport");
 const passportInit = require("./passport/passportInit");
 const connectDB = require("./db/connect");
+const csrf = require("host-csrf");
+const cookieParser = require("cookie-parser");
 require("dotenv").config();
 require("express-async-errors");
 
@@ -31,6 +33,12 @@ const sessionParms = {
   cookie: { secure: false, sameSite: "strict" },
 };
 
+const csrf_options = {
+  protected_operations: ["PATCH"],
+  protected_content_types: ["application/json"],
+  development_mode: true,
+};
+
 if (app.get("env") === "production") {
   app.set("trust proxy", 1); // trust first proxy
   sessionParms.cookie.secure = true; // serve secure cookies
@@ -40,11 +48,14 @@ if (app.get("env") === "production") {
 app.use(session(sessionParms));
 app.use(flash());
 app.set("view engine", "ejs");
+app.use(cookieParser(process.env.SESSION_SECRET));
 app.use(express.urlencoded({ extended: false }));
 
 passportInit();
 app.use(passport.initialize());
 app.use(passport.session());
+
+app.use(csrf(csrf_options));
 
 // Middleware to add flash messages to the response locals
 app.use((req, res, next) => {
