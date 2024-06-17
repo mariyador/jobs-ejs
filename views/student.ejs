@@ -1,0 +1,29 @@
+<%- include("partials/head.ejs") %>
+<%- include("partials/header.ejs") %>
+<h2>Edit Student</h2>
+
+<form method="POST" action="/students/update/<%= student.id %>">
+    <div>
+        <label for="studentName">Student name:</label>
+        <input type="text" id="studentName" name="studentName" value="<%= student ? student.studentName : '' %>"/>
+    </div>
+    <div>
+        <label for="educationLevel">Education level:</label>
+        <select id="educationLevel" name="educationLevel">
+            <option value="beginner" <%= student && student.educationLevel === 'beginner' ? 'selected' : '' %>>Beginner</option>
+            <option value="intermediate" <%= student && student.educationLevel  === 'intermediate' ? 'selected' : '' %>>Intermediate</option>
+            <option value="advanced" <%= student && student.educationLevel  === 'advanced' ? 'selected' : '' %>>Advanced</option>
+        </select>
+    </div>
+    <div>
+        <label for="age">Age:</label>
+        <input type="number" id="age" name="age" value="<%= student ? student.age : '' %>"/>
+    </div>
+    <button type="submit">Edit</button>
+    <a href="/students">
+        <button type="button">Cancel</button>
+    </a>
+    <input type="hidden" name="_csrf" value="<%= _csrf %>" />
+</form>
+
+<%- include("partials/footer.ejs") %>

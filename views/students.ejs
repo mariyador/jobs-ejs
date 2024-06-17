@@ -1,0 +1,37 @@
+<%- include("partials/head.ejs") %>
+<%- include("partials/header.ejs") %>
+<h2>Students List</h2>
+<a href="/students/new">
+    <button type="button">Add a student</button>
+</a>
+<table id="students-table">
+    <tr id="students-table-header">
+        <th>Student name</th>
+        <th>Age</th>
+        <th>Education level</th>
+        <th colspan="2"></th>
+    </tr>
+    <% if (students && students.length) { %>
+        <% students.forEach((student) => { %>
+        <tr>
+            <td><%= student.studentName %></td>
+            <td><%= student.age %></td>
+            <td>
+                <input type="dropdown" disabled value="<%= student.educationLevel === 'beginner' ? 'Beginner' : student.educationLevel === 'intermediate' ? 'Intermediate' : 'Advanced' %>">
+            </td>
+            <td>
+                <a href="/students/edit/<%= student.id %>">
+                    <button type="button">Edit</button>
+                </a>
+            </td>
+            <td>
+                <form action="/students/delete/<%= student.id %>" method="POST">
+                    <button type="submit">Delete</button>
+                    <input type="hidden" name="_csrf" value="<%= _csrf %>" />
+                </form>
+            </td>
+        </tr>
+        <% }) %>
+    <% } %>
+</table>
+<%- include("partials/footer.ejs") %>
